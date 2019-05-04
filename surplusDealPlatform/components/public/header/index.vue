@@ -4,16 +4,23 @@
       <div class="top-header">
         <div class="inner-top-header">
           <div class="phone">服务咨询热线：15347351156</div>
-          <!-- <template> -->
-            <div class="loginin">请
-              <nuxt-link to="/login">
-                <div>登录</div>
-              </nuxt-link>
-            </div>
-            <nuxt-link to="/register">
-              <div class="loginup">立即注册</div>
+          <template v-if="user">
+            <nuxt-link to="/personal">
+              欢迎您，<span class="username">{{ user }}（{{this.type =  this.$store.state.geo.userid==2?'教员':'学员'}}）</span>
             </nuxt-link>
-          <!-- </template> -->
+            <nuxt-link to="/exit">[退出]</nuxt-link>
+          </template>
+
+          <template v-else>
+          <div class="loginin">请
+            <nuxt-link to="/login">
+              <div>登录</div>
+            </nuxt-link>
+          </div>
+          <nuxt-link to="/register">
+            <div class="loginup">立即注册</div>
+          </nuxt-link>
+          </template>
         </div>
       </div>
       <div class="bottom-header">
@@ -46,7 +53,19 @@
 
 <script>
   export default {
+    data () {
+      return {
+        user:'',
+        type:''
+      }
+    },
+    async mounted(){
+          const {status, data:{ user }} = await this.$axios.get('/users/getUser');
+          if(status === 200) {
+            this.user = decodeURIComponent(user) ;
+          }
 
+        }
   }
 
 </script>

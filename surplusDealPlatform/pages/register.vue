@@ -6,7 +6,7 @@
           href="/"
           class="site-logo"/>
         <span class="login">
-          <em class="bold">已有美团账号?</em>
+          <em class="bold">已有美团账号?{{$store.state.geo.userid}}</em>
           <a href="/login">
             <el-button
               type="primary"
@@ -26,6 +26,17 @@
           label="昵称"
           prop="name">
           <el-input v-model="ruleForm.name"/>
+        </el-form-item>
+        <el-form-item
+          label="我是"
+          prop="radio">
+          <el-radio v-model="ruleForm.radio" label="1">学员</el-radio>
+          <el-radio v-model="ruleForm.radio" label="2">教员</el-radio>
+        </el-form-item>
+        <el-form-item
+          label="年龄"
+          prop="age">
+          <el-input v-model="ruleForm.age"/>
         </el-form-item>
         <el-form-item
           label="邮箱"
@@ -84,6 +95,7 @@
         statusMsg: "",
         error: "",
         ruleForm:{
+          radio: '1',
         	name:"",
           code:"",
           pwd:"",
@@ -172,7 +184,9 @@
               username: window.encodeURIComponent(this.ruleForm.name),
               password: CryptoJs.MD5(this.ruleForm.pwd).toString(),
               email: this.ruleForm.email,
-              code: this.ruleForm.code
+              code: this.ruleForm.code,
+              type: this.ruleForm.radio,
+              age: this.ruleForm.age
             })
               .then(({status, data})=>{
                 if(status === 200)
@@ -197,6 +211,8 @@
           }
         })
       }
+    },
+    mounted () {
     }
   }
 </script>

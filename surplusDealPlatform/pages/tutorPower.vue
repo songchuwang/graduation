@@ -11,39 +11,36 @@
         <div class="inner-screen">
           <span class="teacher-kind">老师类型：</span>
           <p>
-            <span>不限</span>
-            <span>大学生</span>
-            <span>专职老师</span>
-            <span>金牌名师</span>
-            <span>金牌教员</span>
+            <span class="kind-teacher" v-for="(item, index) in kind_teachers" :key="index"
+              @click="selectKindTeacher(index)">{{item.name}}</span>
           </p>
         </div>
         <div class="inner-screen">
           <span class="teacher-kind">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
           <p>
-            <span>不限</span>
-            <span>男</span>
-            <span>女</span>
+            <span class="kind-sex" v-for="(item, index) in sexs" :key="index"
+              @click="selectSex(index)">{{item.name}}</span>
           </p>
         </div>
       </div>
       <div class="teacher-list">
         <ul>
-          <li>
+          <li v-for="(item,index) in filterTeacheres" :key="index">
             <div class="header-img">
-              <img src="http://placehold.it/146x146" alt="">
+              <!-- <img src="http://placehold.it/146x146" alt=""> -->
+              <img :src="`data:image/jpg;base64,${item.img}`" alt="">
             </div>
             <div class="content">
-              <h3>宋楚望<span>（男）</span></h3>
+              <h3>{{item.name}}<span>（{{item.sex == '1'?'男':'女'}}）</span></h3>
               <h4>
                 <img src="../assets/img/yellow_03.png" alt="">
-                <span class="desc">宋楚望-湖南文理学院-计算机与电信工程学院</span>
+                <span class="desc">{{item.name}}-{{item.experience}}</span>
                 <img class="tabs-icon" src="../assets/img/xingxing_07.png" alt="">
                 <span class="tabs">独领风骚</span>
                 <span class="tabs">独领风骚</span>
                 <span class="tabs">独领风骚</span>
               </h4>
-              <p><span class="introduce">自我介绍：</span><span>自我介绍:本人从小担任班干部，大一大二期间担任班级班长，现为学院学生会主席，已成为共产党员，擅长沟通交流，表达能力较强。从事家教三年多，带过较多学生，成效突出，可针对不同学生制定对应学习方案，教学目标为提高学生积极主动性，优化结题思维。 大学获奖情况: 全国大学生节能减排竞赛国家三等奖，优秀班长，寝室建设先进个人，武汉理工大学法士特齿轮奖学金，发表三篇英文论文，申请两项发明专利 家教经历: 1.2014年8月，洪山区初二数学，期终学员从50分上升至85分。 2.2015年5月，武昌区高一综合（数理化），期终学员从全班第45名上升至第10名。 3.2016年5月，洪山区初三物理，期终学员从35分上升至80分。</span></p>
+              <p><span class="introduce">自我介绍：</span><span>{{item.desc}}</span></p>
             </div>
           </li>
           <li>
@@ -60,7 +57,11 @@
                 <span class="tabs">独领风骚</span>
                 <span class="tabs">独领风骚</span>
               </h4>
-              <p><span class="introduce">自我介绍：</span><span>自我介绍:本人从小担任班干部，大一大二期间担任班级班长，现为学院学生会主席，已成为共产党员，擅长沟通交流，表达能力较强。从事家教三年多，带过较多学生，成效突出，可针对不同学生制定对应学习方案，教学目标为提高学生积极主动性，优化结题思维。 大学获奖情况: 全国大学生节能减排竞赛国家三等奖，优秀班长，寝室建设先进个人，武汉理工大学法士特齿轮奖学金，发表三篇英文论文，申请两项发明专利 家教经历: 1.2014年8月，洪山区初二数学，期终学员从50分上升至85分。 2.2015年5月，武昌区高一综合（数理化），期终学员从全班第45名上升至第10名。 3.2016年5月，洪山区初三物理，期终学员从35分上升至80分。</span></p>
+              <p><span
+                  class="introduce">自我介绍：</span><span>自我介绍:本人从小担任班干部，大一大二期间担任班级班长，现为学院学生会主席，已成为共产党员，擅长沟通交流，表达能力较强。从事家教三年多，带过较多学生，成效突出，可针对不同学生制定对应学习方案，教学目标为提高学生积极主动性，优化结题思维。
+                  大学获奖情况: 全国大学生节能减排竞赛国家三等奖，优秀班长，寝室建设先进个人，武汉理工大学法士特齿轮奖学金，发表三篇英文论文，申请两项发明专利 家教经历:
+                  1.2014年8月，洪山区初二数学，期终学员从50分上升至85分。 2.2015年5月，武昌区高一综合（数理化），期终学员从全班第45名上升至第10名。
+                  3.2016年5月，洪山区初三物理，期终学员从35分上升至80分。</span></p>
             </div>
           </li>
         </ul>
@@ -71,7 +72,131 @@
 
 <script>
   export default {
+    data() {
+      return {
+        teachers: [],
+        kind_teachers: [{
+            name: "不限",
+            value: '0'
 
+          },
+          {
+            name: "小学",
+            value: '1'
+
+          },
+          {
+            name: "初中",
+            value: '2'
+
+          },
+          {
+            name: "高中",
+            value: '3'
+
+          },
+          {
+            name: "大学",
+            value: '4'
+
+          }
+        ],
+        select_sex: '0',
+        sexs: [{
+            name: "不限",
+            value: '0'
+
+          },
+          {
+            name: "男",
+            value: '1'
+
+          },
+          {
+            name: "女",
+            value: '2'
+
+          }
+        ],
+        select_kind_teacher: '0',
+      }
+    },
+    created() {
+      this.getTeacherData();
+    },
+    computed: {
+      filterTeacheres() {
+        // console.log(this.teachers);
+        // console.log(this.select_sex, this.select_kind_teacher);
+        
+        if (this.select_sex == '0' && this.select_kind_teacher == '0') {
+          return this.teachers
+        } else if (this.select_sex == '0' && this.select_kind_teacher != '0') {
+          return this.teachers.filter((item) => {
+            return item.teacherType == this.select_kind_teacher;
+          })
+        } else if (this.select_sex != '0' && this.select_kind_teacher == '0') {
+          return this.teachers.filter((item) => {
+            return item.sex == this.select_sex;
+          })
+        } else {
+
+          return this.teachers.filter((item) => {
+            return item.sex == this.select_sex && item.teacherType == this.select_kind_teacher;
+          })
+        }
+      }
+    },
+    methods: {
+      selectSex(index) {
+        if (index == 0) {
+          this.select_sex = '0'
+        } else if (index == 1) {
+          this.select_sex = '1'
+        } else {
+          this.select_sex = '2'
+        }
+        console.log(this.select_sex);
+        let select_dom = document.querySelectorAll('.kind-sex');
+        for (let i = 0; i < select_dom.length; i++) {
+          select_dom[i].classList.remove('select-kind-sex')
+        }
+        // console.log(select_dom[index]);
+
+        select_dom[index].classList.add('select-kind-sex');
+
+      },
+      getTeacherData() {
+        this.$axios.post('/users/getdata').then(res => {
+          this.teachers = res.data.data;
+          console.log(this.teachers);
+
+
+        })
+      },
+      selectKindTeacher(kind) {
+        if (kind == 1) {
+          this.select_kind_teacher = '1'
+        } else if (kind == 2) {
+          this.select_kind_teacher = "2"
+        } else if (kind == 3) {
+          this.select_kind_teacher = "3"
+        } else if (kind == 4) {
+          this.select_kind_teacher = "4"
+        } else {
+          this.select_kind_teacher = "0"
+        }
+
+        let select_dom = document.querySelectorAll('.kind-teacher');
+        for (let i = 0; i < select_dom.length; i++) {
+          select_dom[i].classList.remove('select-kind-teacher')
+        }
+        // console.log(select_dom[index]);
+
+        select_dom[kind].classList.add('select-kind-teacher');
+
+      },
+    },
   }
 
 </script>
@@ -129,6 +254,14 @@
             margin-right: 20px;
           }
 
+          .select-kind-teacher {
+            color: red;
+          }
+
+          .select-kind-sex {
+            color: red;
+          }
+
           p {
             span {
               margin: 0 15px;
@@ -165,12 +298,15 @@
               margin-right: 20px;
 
               img {
+                width: 146px;
+                height: 146px;
                 border-radius: 50%;
               }
             }
 
             .content {
-                width: 970px;
+              width: 970px;
+
               h3 {
                 width: 970px;
                 height: 28px;
@@ -200,24 +336,26 @@
                   width: 14px;
                   height: 18px;
                 }
-                .tabs{
-                    display: inline-block;
-                    text-align: center;
-                    width: 72px;
-                    height: 28px;
-                    box-sizing: border-box;
-                    line-height: 28px;
-                    padding: 0 5px;
-                    background: #c7c7c7;
-                    color: #fff;
-                    margin-left: 10px;
+
+                .tabs {
+                  display: inline-block;
+                  text-align: center;
+                  width: 72px;
+                  height: 28px;
+                  box-sizing: border-box;
+                  line-height: 28px;
+                  padding: 0 5px;
+                  background: #c7c7c7;
+                  color: #fff;
+                  margin-left: 10px;
                 }
 
 
               }
-              p{
-                  color: #7f7f7f;
-                  font-size: 13px;
+
+              p {
+                color: #7f7f7f;
+                font-size: 13px;
 
               }
             }

@@ -107,26 +107,88 @@
     </div>
     <div class="star">
       <div class="header">明星教员</div>
-      <div v-for="(item, index) in star_list" :key="index">
+      <div>
         <div class="header-top">
-          <span>{{item}}</span>
+          <span>小学</span>
         </div>
         <div class="person-list">
           <ul>
-            <li>
+            <li v-for="(item2,i) in filterPrimaryTeachers" :key="i">
               <div class="header">
-                <img src="http://placehold.it/150x150" alt="">
+                <!-- <img src="http://placehold.it/150x150" alt=""> -->
+                  <img :src="`data:image/jpg;base64,${item2.img}`" alt="">
               </div>
               <div class="content">
-                <h4>宋楚望</h4>
-                <p><span>湖南文理学院</span>|<span>大四，信息管理</span></p>
-                <p class="desc">本人毕业于湖南文理学院计算机与电信工程学院</p>
+                <h4>{{item2.name}}</h4>
+                <p><span>{{item2.experience}}</span></p>
+                <p class="desc">{{item2.desc}}</p>
               </div>
             </li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="header-top">
+          <span>初中</span>
+        </div>
+        <div class="person-list">
+          <ul>
+            <li v-for="(item2,i) in filterJuniorTeachers" :key="i">
+              <div class="header">
+                <!-- <img src="http://placehold.it/150x150" alt=""> -->
+                  <img :src="`data:image/jpg;base64,${item2.img}`" alt="">
+              </div>
+              <div class="content">
+                <h4>{{item2.name}}</h4>
+                <p><span>{{item2.experience}}</span></p>
+                <p class="desc">{{item2.desc}}</p>
+              </div>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="header-top">
+          <span>高中</span>
+        </div>
+        <div class="person-list">
+          <ul>
+            <li v-for="(item2,i) in filterHighschoolTeachers" :key="i">
+              <div class="header">
+                <!-- <img src="http://placehold.it/150x150" alt=""> -->
+                  <img :src="`data:image/jpg;base64,${item2.img}`" alt="">
+              </div>
+              <div class="content">
+                <h4>{{item2.name}}</h4>
+                <p><span>{{item2.experience}}</span></p>
+                <p class="desc">{{item2.desc}}</p>
+              </div>
+            </li>
+            
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="header-top">
+          <span>大学</span>
+        </div>
+        <div class="person-list">
+          <ul>
+            <li v-for="(item2,i) in filterUniversityTeachers" :key="i">
+              <div class="header">
+                <!-- <img src="http://placehold.it/150x150" alt=""> -->
+                  <img :src="`data:image/jpg;base64,${item2.img}`" alt="">
+              </div>
+              <div class="content">
+                <h4>{{item2.name}}</h4>
+                <p><span>{{item2.experience}}</span></p>
+                <p class="desc">{{item2.desc}}</p>
+              </div>
+            </li>
+            
           </ul>
         </div>
       </div>
@@ -139,6 +201,7 @@
     layouts: 'dafault',
     data() {
       return {
+        teachers:[],
         nav_list_name: [
           '小学',
           '初中',
@@ -156,6 +219,42 @@
           '初中',
           '高中'
         ]
+      }
+    },
+    created () {
+      this.getTeacherData();
+    },
+    methods: {
+      
+      getTeacherData() {
+        this.$axios.post('/users/getdata').then(res=>{
+          this.teachers = res.data.data;
+          console.log(this.teachers);
+          
+          
+        })
+      }
+    },
+    computed: {
+      filterPrimaryTeachers() {
+        return this.teachers.filter((item)=>{
+          return item.teacherType == '1'
+        });
+      },
+      filterJuniorTeachers() {
+        return this.teachers.filter((item)=>{
+          return item.teacherType == '2'
+        });
+      },
+      filterHighschoolTeachers() {
+        return this.teachers.filter((item)=>{
+          return item.teacherType == '3'
+        });
+      },
+      filterUniversityTeachers() {
+        return this.teachers.filter((item)=>{
+          return item.teacherType == '4'
+        });
       }
     }
   }
@@ -440,7 +539,7 @@
         ul {
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          justify-content: flex-start;
 
           li {
             width: 228px;
@@ -457,7 +556,7 @@
               align-items: center;
 
               img {
-                border-radius: 50%;
+                // border-radius: 50%;
               }
             }
 

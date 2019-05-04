@@ -1,7 +1,5 @@
 <template>
-  <div>
-    123
-  </div>
+  <div class=""/>
 </template>
 
 <script>

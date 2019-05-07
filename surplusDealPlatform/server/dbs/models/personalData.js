@@ -6,6 +6,10 @@ const personaldataSchema = new Schema({
         type: String,
         required:true
     },
+    subject: {
+        type: String,
+        required:true
+    },
     teacherType: {
         type:String,
         required: true

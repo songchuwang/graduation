@@ -16,6 +16,13 @@
           </p>
         </div>
         <div class="inner-screen">
+          <span class="teacher-kind">选择科目：</span>
+          <p>
+            <span class="kind-subject" v-for="(item, index) in teacherSubjects" :key="index"
+              @click="selectKindSubject(item.value,index)">{{item.label}}</span>
+          </p>
+        </div>
+        <div class="inner-screen">
           <span class="teacher-kind">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</span>
           <p>
             <span class="kind-sex" v-for="(item, index) in sexs" :key="index"
@@ -75,6 +82,28 @@
     data() {
       return {
         teachers: [],
+        select_subject: '0',
+        teacherSubjects: [{
+            label: '语文',
+            value: 'chinese'
+          },
+          {
+            label: '数学',
+            value: 'math'
+          },
+          {
+            label: '英语',
+            value: 'english'
+          },
+          {
+            label: '理综',
+            value: 'science'
+          },
+          {
+            label: '文综',
+            value: 'art'
+          },
+        ],
         kind_teachers: [{
             name: "不限",
             value: '0'
@@ -128,26 +157,51 @@
       filterTeacheres() {
         // console.log(this.teachers);
         // console.log(this.select_sex, this.select_kind_teacher);
-        
-        if (this.select_sex == '0' && this.select_kind_teacher == '0') {
+
+        if (this.select_sex == '0' && this.select_kind_teacher == '0' && this.select_subject == '0') {
           return this.teachers
-        } else if (this.select_sex == '0' && this.select_kind_teacher != '0') {
+        } else if (this.select_sex == '0' && this.select_subject == '0' && this.select_kind_teacher != '0') {
           return this.teachers.filter((item) => {
             return item.teacherType == this.select_kind_teacher;
           })
-        } else if (this.select_sex != '0' && this.select_kind_teacher == '0') {
+        } else if (this.select_sex != '0' && this.select_kind_teacher == '0' && this.select_subject == '0') {
           return this.teachers.filter((item) => {
             return item.sex == this.select_sex;
+          })
+        } else if (this.select_sex == '0' && this.select_kind_teacher == '0' && this.select_subject != '0') {
+          return this.teachers.filter((item) => {
+            return item.subject == this.select_subject;
+          })
+        } else if (this.select_sex == '0' && this.select_kind_teacher != '0' && this.select_subject != '0') {
+          return this.teachers.filter((item) => {
+            return item.subject == this.select_subject && item.teacherType == this.select_kind_teacher;
+          })
+        } else if (this.select_sex != '0' && this.select_kind_teacher != '0' && this.select_subject == '0') {
+          return this.teachers.filter((item) => {
+            return item.sex == this.select_sex && item.teacherType == this.select_kind_teacher;
+          })
+        } else if (this.select_sex != '0' && this.select_kind_teacher == '0' && this.select_subject != '0') {
+          return this.teachers.filter((item) => {
+            return item.sex == this.select_sex && item.subject == this.select_subject;
           })
         } else {
 
           return this.teachers.filter((item) => {
-            return item.sex == this.select_sex && item.teacherType == this.select_kind_teacher;
+            return item.sex == this.select_sex && item.teacherType == this.select_kind_teacher && item.subject ==
+              this.select_subject;
           })
         }
       }
     },
     methods: {
+      selectKindSubject(value, index) {
+        this.select_subject = value
+        let select_dom = document.querySelectorAll('.kind-subject');
+        for (let i = 0; i < select_dom.length; i++) {
+          select_dom[i].classList.remove('select-kind-subject')
+        }
+        select_dom[index].classList.add('select-kind-subject');
+      },
       selectSex(index) {
         if (index == 0) {
           this.select_sex = '0'
@@ -161,8 +215,6 @@
         for (let i = 0; i < select_dom.length; i++) {
           select_dom[i].classList.remove('select-kind-sex')
         }
-        // console.log(select_dom[index]);
-
         select_dom[index].classList.add('select-kind-sex');
 
       },
@@ -259,6 +311,10 @@
           }
 
           .select-kind-sex {
+            color: red;
+          }
+
+          .select-kind-subject {
             color: red;
           }
 

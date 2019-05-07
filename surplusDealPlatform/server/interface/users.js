@@ -6,6 +6,10 @@ import Passport from "./utils/passport"
 import Email from "../dbs/config"
 import axios from "./utils/axios"
 import Personal from '../dbs/models/personalData'
+import Demand from '../dbs/models/demand'
+import Order from '../dbs/models/order'
+import Complete from '../dbs/models/complete'
+
 
 let router = new Router({
   prefix: "/users"
@@ -13,51 +17,237 @@ let router = new Router({
 
 let Store = new Redis().client
 
+// 预约信息
+router.post("/getCompleteOrder", async (ctx) => {
 
+  let data = await Complete.find({})
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '获取订单完成数据',
+      data: data
+
+    }
+  }
+
+})
+router.post("/acceptOrder", async (ctx) => {
+  const {
+    id,
+    order,
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher,
+    _id
+  } = ctx.request.body
+
+
+  Order.remove({_id}, function (err, docs) {
+    if (err) console.log(err);
+    console.log('删除成功：' + docs);
+  });
+
+  let data = await Complete.create({
+    id,
+    order,
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher
+  })
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '预约成功',
+      data: data
+
+    }
+  }
+
+})
+router.post("/removemyOrder", async (ctx) => {
+  const {
+    _id
+  } = ctx.request.body;
+
+
+  Order.remove({
+    _id
+  }, function (err, docs) {
+    if (err) console.log(err);
+    console.log('删除成功：' + docs);
+  });
+  // if (data) {
+  ctx.body = {
+    code: 0,
+    msg: '删除数据',
+
+  }
+  // }
+
+})
+router.post("/order", async (ctx) => {
+  const {
+    id,
+    order,
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher,
+    _id
+  } = ctx.request.body
+
+  // let finduser = await Order.find({
+  //   id
+  // })
+  // if (finduser) {
+  //   ctx.body = {
+  //     code: -1,
+  //     msg: '该学员已被预约过',
+  //   }
+  //   return false
+  // }
+  Demand.remove({_id}, function (err, docs) {
+    if (err) console.log(err);
+    console.log('删除成功：' + docs);
+  });
+
+  let data = await Order.create({
+    id,
+    order,
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher
+  })
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '预约成功',
+      data: data
+
+    }
+  }
+
+})
+router.post("/getOrder", async (ctx) => {
+
+  let data = await Order.find({})
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '预约成功',
+      data: data
+
+    }
+  }
+
+})
 // 获取个人资料
 router.post("/getdata", async (ctx) => {
-  // const {
-  //   user,
-  //   name,
-  //   experience,
-  //   desc,
-  //   img,
-  //   teacherType
-  // } = ctx.request.body; //post方式
 
-  let finduser = await Personal.find({
-  })
+  let finduser = await Personal.find({})
   if (finduser) {
     ctx.body = {
       code: 0,
       msg: '拿到数据',
-      data:finduser
+      data: finduser
 
     }
   }
-  // if(nuser) {
-  //   let res = await axios.post('/users/signin', {
-  //     username,
-  //     password
-  //   })
-  //   if(res.data && res.data.code === 0) {
-  //     ctx.body = {
-  //       code: 0,
-  //       msg: "注册成功",
-  //       user: res.data.user
-  //     }
-  //   } else {
-  //     ctx.body = {
-  //       code: -1,
-  //       msg: "error"
-  //     }
-  //   }
-  // } else {
-  //   ctx.body = {
-  //     code: -1,
-  //     msg: "注册失败"
-  //   }
+})
+//发布需求信息
+router.post("/releasedemand", async (ctx) => {
+  const {
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher
+  } = ctx.request.body; //post方式
+
+
+  let data = await Demand.create({
+    phone,
+    address,
+    desc,
+    demand,
+    date,
+    publisher
+  })
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '修改成功',
+      data: data
+
+    }
+  }
+
+})
+router.post("/getdemand", async (ctx) => {
+
+
+  let data = await Demand.find({})
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '拿到数据',
+      data: data
+
+    }
+  }
+
+})
+router.post("/getmydemand", async (ctx) => {
+  const {
+    publisher
+  } = ctx.request.body;
+
+  let data = await Demand.find({
+    publisher
+  })
+  if (data) {
+    ctx.body = {
+      code: 0,
+      msg: '拿到数据',
+      data: data
+
+    }
+  }
+
+})
+//删除数据
+router.post("/removemydemand", async (ctx) => {
+  const {
+    _id
+  } = ctx.request.body;
+
+
+  Demand.remove({
+    _id
+  }, function (err, docs) {
+    if (err) console.log(err);
+    console.log('删除成功：' + docs);
+  });
+  // if (data) {
+  ctx.body = {
+    code: 0,
+    msg: '删除数据',
+
+  }
   // }
+
 })
 // 个人资料
 router.post("/savedata", async (ctx) => {
@@ -68,7 +258,8 @@ router.post("/savedata", async (ctx) => {
     desc,
     img,
     sex,
-    teacherType
+    teacherType,
+    subject
   } = ctx.request.body; //post方式
 
   let finduser = await Personal.find({
@@ -92,6 +283,7 @@ router.post("/savedata", async (ctx) => {
     img,
     teacherType,
     sex,
+    subject
   })
   if (nuser) {
     ctx.body = {

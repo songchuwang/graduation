@@ -19,14 +19,181 @@
     <div class="content">
       <template>
         <el-tabs tab-position="left">
-          <el-tab-pane label="我的订单">
+          <el-tab-pane v-if="this.$store.state.geo.userid==2" label="我的订单">
             <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
-              <el-tab-pane label="全部订单" name="first">用户管理</el-tab-pane>
-              <el-tab-pane label="预约成功" name="second">配置管理</el-tab-pane>
-              <el-tab-pane label="订单完成" name="third">角色管理</el-tab-pane>
+              <el-tab-pane label="全部订单" name="first">
+                <el-table :data="getMyOrders" style="width: 1200px">
+                  <el-table-column label="预约日期" width="180">
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="地址" width="220">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.address }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.address }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员要求" width="200">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.demand }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.demand }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员简介" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.desc }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="联系方式" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.phone }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template slot-scope="scope">
+                      <el-button type="danger" size="mini" @click="handleDeleteOrder(scope.$index, scope.row)">删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
+              <el-tab-pane label="带学员确认" name="second">
+                <el-table :data="getMyOrders" style="width: 1200px">
+                  <el-table-column label="预约日期" width="180">
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="地址" width="220">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.address }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.address }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员要求" width="200">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.demand }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.demand }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员简介" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.desc }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="联系方式" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.phone }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template slot-scope="scope">
+                      <el-button type="danger" size="mini" @click="handleDeleteOrder(scope.$index, scope.row)">删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
+              <el-tab-pane label="预约成功" name="third">
+                <el-table :data="getCompleteData2" style="width: 1200px">
+                  <el-table-column label="预约日期" width="180">
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="地址" width="160">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.address }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.address }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员要求" width="220">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.demand }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.demand }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员简介" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.desc }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="联系方式" width="140">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.phone }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="180">
+                    <template>
+                      <p>订单已完成</p>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
             </el-tabs>
           </el-tab-pane>
-          <el-tab-pane label="个人资料">
+          <el-tab-pane v-if="this.$store.state.geo.userid==2" label="个人资料">
             <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
               <el-form-item prop="imgs">
                 <div>上传商品图片 <span>多角度拍摄商品细节，全面展示商品；图片大小不能超过2M哦~</span></div>
@@ -58,6 +225,13 @@
                 </el-select>
               </el-form-item>
 
+              <el-form-item label="教授科目">
+                <el-select v-model="subject" placeholder="请选择文章标签">
+                  <el-option v-for="item in teacherSubjects" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+
               <el-form-item label="个人标签">
                 <el-select v-model="value10" multiple filterable allow-create default-first-option
                   placeholder="请选择文章标签">
@@ -76,16 +250,196 @@
 
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="需求信息">
+          <el-tab-pane v-if="this.$store.state.geo.userid==1" label="需求信息">
             <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
               <el-tab-pane label="发布需求" name="first">
-                
+                <el-form ref="ruleForm2" :model="ruleForm2" style="width:500px" :rules="rules" label-width="100px"
+                  class="demo-ruleForm">
+                  <el-form-item label="联系方式" prop="phone">
+                    <el-input placeholder="请输入手机号码" v-model="ruleForm2.phone" />
+                  </el-form-item>
+                  <el-form-item label="家教地址" prop="address">
+                    <el-input placeholder="请输入家教地址" v-model="ruleForm2.address" />
+                  </el-form-item>
+                  <el-form-item label="学员简介" prop="desc">
+                    <el-input type="textarea" :rows="4" placeholder="请说明您的个人情况" v-model="ruleForm2.desc">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="学员要求" prop="demand">
+                    <el-input type="textarea" :rows="4" placeholder="对教员的要求" v-model="ruleForm2.demand">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="releaseDemand">发布需求
+                    </el-button>
+                  </el-form-item>
+                </el-form>
               </el-tab-pane>
-              <el-tab-pane label="已发布" name="second">配置管理</el-tab-pane>
-              <el-tab-pane label="订单完成" name="third">角色管理</el-tab-pane>
+              <el-tab-pane label="已发布" name="second">
+                <el-table :data="alreadyReleaseData" style="width: 1000px">
+                  <el-table-column label="日期" width="180">
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="地址" width="220">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.address }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.address }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员要求" width="300">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.demand }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.demand }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员简介" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.desc }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template slot-scope="scope">
+                      <el-button type="danger" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
+              <el-tab-pane label="订单完成" name="third">
+                <el-table :data="getCompleteData" style="width: 1200px">
+                  <el-table-column label="预约日期" width="180">
+                    <template slot-scope="scope">
+                      <i class="el-icon-time"></i>
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="地址" width="160">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                        <p>住址: {{ scope.row.address }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.address }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员要求" width="220">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.demand }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.demand }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="学员简介" width="180">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.desc }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="预约教员" width="140">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>住址: {{ scope.row.desc }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          {{ scope.row.order }}
+                        </div>
+                      </el-popover>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" width="180">
+                    <template>
+                      <p>订单已完成</p>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
             </el-tabs>
           </el-tab-pane>
-          <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+          <el-tab-pane v-if="this.$store.state.geo.userid==1" label="查看预约信息">
+            <el-table :data="getStudentOrders " style="width: 1200px">
+              <el-table-column label="预约日期" width="180">
+                <template slot-scope="scope">
+                  <i class="el-icon-time"></i>
+                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="地址" width="160">
+                <template slot-scope="scope">
+                  <el-popover trigger="hover" placement="top">
+                    <!-- <p>姓名: {{ scope.row.name }}</p> -->
+                    <p>住址: {{ scope.row.address }}</p>
+                    <div slot="reference" class="name-wrapper">
+                      {{ scope.row.address }}
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column label="学员要求" width="220">
+                <template slot-scope="scope">
+                  <el-popover trigger="hover" placement="top">
+                    <p>住址: {{ scope.row.demand }}</p>
+                    <div slot="reference" class="name-wrapper">
+                      {{ scope.row.demand }}
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column label="学员简介" width="180">
+                <template slot-scope="scope">
+                  <el-popover trigger="hover" placement="top">
+                    <p>住址: {{ scope.row.desc }}</p>
+                    <div slot="reference" class="name-wrapper">
+                      {{ scope.row.desc }}
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column label="预约教员" width="140">
+                <template slot-scope="scope">
+                  <el-popover trigger="hover" placement="top">
+                    <p>住址: {{ scope.row.desc }}</p>
+                    <div slot="reference" class="name-wrapper">
+                      {{ scope.row.order }}
+                    </div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" width="180">
+                <template slot-scope="scope">
+                  <el-button type="danger" size="mini" @click="handleDeleteOrder(scope.$index, scope.row)">拒绝
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="acceptOrder(scope.$index, scope.row)">接受预约
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
       </template>
     </div>
@@ -97,12 +451,54 @@
     layout: 'blank',
     data() {
       return {
+        my_orders: [],
         activeName2: '2',
         dialogVisible: false,
+        complete_order: [],
         dialogImageUrl: '',
+        subject: '',
         base64_img: [],
         textarea: '',
         imageUrl: '',
+        alreadyReleaseData: [],
+        tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
+        teacherSubjects: [{
+            label: '语文',
+            value: 'chinese'
+          },
+          {
+            label: '数学',
+            value: 'math'
+          },
+          {
+            label: '英语',
+            value: 'english'
+          },
+          {
+            label: '理综',
+            value: 'science'
+          },
+          {
+            label: '文综',
+            value: 'art'
+          },
+        ],
         options5: [{
           value: 'HTML',
           label: 'HTML'
@@ -138,12 +534,98 @@
           imgs: [],
           sex: '1'
         },
+        ruleForm2: {
+          phone: '',
+          address: "",
+          desc: '',
+          demand: '',
+        },
         rules: {
 
         }
       }
     },
+    created() {
+      this.getMyOrder()
+      this.getCompleteOrder()
+    },
+    mounted() {
+      this.$axios.post('/users/getmydemand', {
+        publisher: this.$store.state.geo.username
+      }).then(res => {
+        this.alreadyReleaseData = res.data.data
+
+      })
+    },
     methods: {
+      getCompleteOrder() {
+        this.$axios.post('/users/getCompleteOrder').then(res => {
+          this.complete_order = res.data.data;
+          console.log(this.complete_order);
+        })
+      },
+      getMyOrder() {
+        this.$axios.post('/users/getOrder').then(res => {
+          this.my_orders = res.data.data;
+          console.log(this.my_orders);
+
+
+        })
+      },
+      releaseDemand() {
+        let date = new Date().toLocaleDateString()
+        this.$axios.post('/users/releasedemand', {
+          publisher: this.$store.state.geo.username,
+          phone: this.ruleForm2.phone,
+          address: this.ruleForm2.address,
+          desc: this.ruleForm2.desc,
+          demand: this.ruleForm2.demand,
+          date
+
+        }).then(res => {
+          if (res.status == 200) {
+            this.$message.success('发布成功')
+          }
+
+        })
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
+        this.$axios.post('/users/removemydemand', {
+          _id: row._id
+        }).then(res => {
+          if (res.status == 200) {
+            this.$message.success('删除成功')
+            window.location.reload()
+          }
+
+
+        })
+      },
+      acceptOrder(index, row) {
+        console.log(index, row);
+        this.$axios.post('/users/acceptOrder', row).then(res => {
+          if (res.status == 200) {
+            this.$message.success('预约成功')
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          }
+        })
+      },
+      handleDeleteOrder(index, row) {
+        console.log(index, row);
+        this.$axios.post('/users/removemyOrder', {
+          _id: row._id
+        }).then(res => {
+          if (res.status == 200) {
+            this.$message.success('删除成功')
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+          }
+        })
+      },
       savePersonalData() {
         console.log(this.imageUrl);
         console.log(this.base64_img[0].url);
@@ -156,7 +638,8 @@
           desc: this.ruleForm.desc,
           img: this.base64_img[0].url,
           teacherType: this.teacherType,
-          sex: this.ruleForm.sex
+          sex: this.ruleForm.sex,
+          subject: this.subject
 
         }).then(res => {
           console.log(res.data);
@@ -213,6 +696,29 @@
         }
         return isJPG && isLt2M;
       }
+    },
+    computed: {
+      getMyOrders() {
+        return this.my_orders.filter((item) => {
+          return item.order == this.$store.state.geo.username;
+        })
+      },
+      getStudentOrders() {
+        return this.my_orders.filter((item) => {
+          return item.publisher == this.$store.state.geo.username;
+        })
+      },
+      getCompleteData() {
+        return this.complete_order.filter((item) => {
+          return item.publisher == this.$store.state.geo.username;
+        })
+      },
+      getCompleteData2() {
+        return this.complete_order.filter((item) => {
+          return item.order == this.$store.state.geo.username;
+        })
+      }
+
     }
   }
 

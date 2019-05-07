@@ -8,47 +8,52 @@
         <p>首页 > 师资力量</p>
       </div>
       <!-- <div class="top-bar"> -->
-        <el-table :data="tableData5" style="width: 100%">
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="商品名称">
-                  <span>{{ props.row.name }}</span>
-                </el-form-item>
-                <el-form-item label="所属店铺">
-                  <span>{{ props.row.shop }}</span>
-                </el-form-item>
-                <el-form-item label="商品 ID">
-                  <span>{{ props.row.id }}</span>
-                </el-form-item>
-                <el-form-item label="店铺 ID">
-                  <span>{{ props.row.shopId }}</span>
-                </el-form-item>
-                <el-form-item label="商品分类">
-                  <span>{{ props.row.category }}</span>
-                </el-form-item>
-                <el-form-item label="店铺地址">
-                  <span>{{ props.row.address }}</span>
-                </el-form-item>
-                <el-form-item label="商品描述">
-                  <span>{{ props.row.desc }}</span>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
-          <el-table-column label="学员编号" prop="id">
-          </el-table-column>
-          <el-table-column label="地址" prop="name">
-          </el-table-column>
-          <el-table-column label="学员要求" prop="desc">
-          </el-table-column>
-          <el-table-column label="学员简介" prop="desc">
-          </el-table-column>
-          <el-table-column label="发布日期" prop="desc">
-          </el-table-column>
-          <el-table-column label="操作" prop="desc">
-          </el-table-column>
-        </el-table>
+      <el-table :data="tableData" style="width: 1200px">
+        <el-table-column label="日期" width="180">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="地址" width="220">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <!-- <p>姓名: {{ scope.row.name }}</p> -->
+              <p>住址: {{ scope.row.address }}</p>
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.address }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="学员要求" width="300">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <!-- <p>姓名: {{ scope.row.name }}</p> -->
+              <p>住址: {{ scope.row.demand }}</p>
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.demand }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="学员简介" width="180">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <!-- <p>姓名: {{ scope.row.name }}</p> -->
+              <p>住址: {{ scope.row.desc }}</p>
+              <div slot="reference" class="name-wrapper">
+                {{ scope.row.desc }}
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">预约</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <!-- </div> -->
     </div>
 
@@ -59,41 +64,65 @@
   export default {
     data() {
       return {
-          tableData5: [{
-          id: '12987122',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
+        tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
-          id: '12987123',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
         }, {
-          id: '12987125',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
         }, {
-          id: '12987126',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }]
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
+      }
+    },
+    created() {
+      this.getDemandData()
+    },
+    methods: {
+      getDemandData() {
+        this.$axios.post('/users/getdemand').then(res => {
+          this.tableData = res.data.data
+        })
+      },
+      handleEdit(index, row) {
+        let data = row;
+        data.order = this.$store.state.geo.username;
+        data.id = row._id;
+        console.log(data);
+        
+        if(this.$store.state.geo.userid!=2){
+          this.$message.error("您不是教员，不能预约")
+        }else{
+          this.$axios.post('/users/order',
+            data
+          ).then(res=>{
+            if(res.data.code == -1){
+              this.$message.error(res.data.msg)
+            }else {
+              this.$message.success("预约成功")
+              setTimeout(()=>{
+                window.location.reload()
+              },1000)
+              
+            }
+          })
+        }
+        
+        console.log(index, row);
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
       }
     }
+
   }
 
 </script>

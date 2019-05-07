@@ -1,15 +1,7 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const OrderSchema = new Schema({
-  order: {
-    type: String,
-    required: true
-  },
-  id: {
-    type: String,
-    required: true
-  },
+const demandSchema = new Schema({
   phone: {
     type: String,
     required: true
@@ -36,4 +28,4 @@ const OrderSchema = new Schema({
   },
 })
 
-export default mongoose.model("Order", OrderSchema)
+export default mongoose.model("Demand", demandSchema)
